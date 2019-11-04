@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Furjoneta</string>
+    <string name="title_activity_home">Mis rutas</string>
 </resources>

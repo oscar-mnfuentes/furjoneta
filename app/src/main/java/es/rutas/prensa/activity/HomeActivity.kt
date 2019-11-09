@@ -1,6 +1,7 @@
 package es.rutas.prensa.activity
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
@@ -13,7 +14,9 @@ import kotlinx.android.synthetic.main.activity_home.*
 class HomeActivity : AppCompatActivity(), RouteFragment.OnListFragmentInteractionListener {
 
     override fun onListFragmentInteraction(item: RouteDto?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(item != null) {
+            loadRouteFragment(item)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,13 +24,16 @@ class HomeActivity : AppCompatActivity(), RouteFragment.OnListFragmentInteractio
         setContentView(R.layout.activity_home)
         setSupportActionBar(toolbar)
 
-        loadRouteFragment()
+        loadRouteListFragment()
     }
 
-    private fun loadRouteFragment() {
+    private fun loadRouteListFragment() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(home_fragment_container.id, RouteFragment.newInstance(1), "RouteFragment")
         fragmentTransaction.commit()
     }
 
+    private fun loadRouteFragment(route: RouteDto) {
+        Log.d("ROUTE: ", route.toString())
+    }
 }

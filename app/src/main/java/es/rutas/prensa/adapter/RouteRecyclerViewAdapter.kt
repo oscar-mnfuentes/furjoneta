@@ -16,10 +16,9 @@ import kotlinx.android.synthetic.main.fragment_route.view.*
 /**
  * [RecyclerView.Adapter] that can display a [RouteDto] and makes a call to the
  * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
  */
 class RouteRecyclerViewAdapter(
-    private val mValues: ArrayList<RouteDto>?,
+    private val mValues: ArrayList<RouteDto>,
     private val mListener: OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<RouteRecyclerViewAdapter.ViewHolder>() {
 
@@ -53,7 +52,7 @@ class RouteRecyclerViewAdapter(
         }
     }
 
-    override fun getItemCount(): Int = mValues?.size ?: 0
+    override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.item_number
@@ -62,11 +61,5 @@ class RouteRecyclerViewAdapter(
         override fun toString(): String {
             return super.toString() + " '" + mContentView.text + "'"
         }
-    }
-
-    fun setMValues(mValues: ArrayList<RouteDto>) {
-        this.mValues?.clear()
-        this.mValues?.addAll(mValues)
-        notifyDataSetChanged()
     }
 }

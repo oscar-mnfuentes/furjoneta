@@ -22,7 +22,6 @@ import es.rutas.prensa.service.RouteService
  */
 class RouteFragment : Fragment() {
 
-    // TODO: Customize parameters
     private var columnCount = 1
 
     private var listener: OnListFragmentInteractionListener? = null
@@ -32,8 +31,6 @@ class RouteFragment : Fragment() {
     private val routeService: RouteService by lazy {
         RouteService(context!!)
     }
-
-    private var routeAdapter: RouteRecyclerViewAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +44,15 @@ class RouteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_route_list, container, false)
-        routeAdapter = RouteRecyclerViewAdapter(routes, listener)
-        loadRoutes(view)
+        if (view is RecyclerView) {
+            with(view) {
+                layoutManager = when {
+                    columnCount <= 1 -> LinearLayoutManager(context)
+                    else -> GridLayoutManager(context, columnCount)
+                }
+                loadRoutes()
+            }
+        }
         return view
     }
 
@@ -78,16 +82,13 @@ class RouteFragment : Fragment() {
      * for more information.
      */
     interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onListFragmentInteraction(item: RouteDto?)
     }
 
     companion object {
 
-        // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
 
-        // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
             RouteFragment().apply {
@@ -97,18 +98,12 @@ class RouteFragment : Fragment() {
             }
     }
 
-    private fun loadRoutes(view: View) {
+    private fun loadRoutes() {
         this.routeService.getRoutes(Request.Method.GET, {response ->
-            // Set the adapter
-            if (view is RecyclerView) {
-                with(view) {
-                    layoutManager = when {
-                        columnCount <= 1 -> LinearLayoutManager(context)
-                        else -> GridLayoutManager(context, columnCount)
-                    }
-                    adapter = RouteRecyclerViewAdapter(response, listener)
-
-                }
+            routes.clear()
+            routes.addAll(response)
+            with(view as RecyclerView) {
+                adapter = RouteRecyclerViewAdapter(response, listener)
             }
         }, {
 

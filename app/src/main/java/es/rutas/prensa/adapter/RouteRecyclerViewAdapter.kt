@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_route.view.*
  * TODO: Replace the implementation with code for your data type.
  */
 class RouteRecyclerViewAdapter(
-    private val mValues: List<RouteDto>,
+    private val mValues: ArrayList<RouteDto>?,
     private val mListener: OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<RouteRecyclerViewAdapter.ViewHolder>() {
 
@@ -41,17 +41,19 @@ class RouteRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
-        holder.mIdView.text = item.id
-        holder.mContentView.text = item.name
+        if(!mValues.isNullOrEmpty()) {
+            val item = mValues[position]
+            holder.mIdView.text = item.id
+            holder.mContentView.text = item.name
 
-        with(holder.mView) {
-            tag = item
-            setOnClickListener(mOnClickListener)
+            with(holder.mView) {
+                tag = item
+                setOnClickListener(mOnClickListener)
+            }
         }
     }
 
-    override fun getItemCount(): Int = mValues.size
+    override fun getItemCount(): Int = mValues?.size ?: 0
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.item_number
@@ -60,5 +62,11 @@ class RouteRecyclerViewAdapter(
         override fun toString(): String {
             return super.toString() + " '" + mContentView.text + "'"
         }
+    }
+
+    fun setMValues(mValues: ArrayList<RouteDto>) {
+        this.mValues?.clear()
+        this.mValues?.addAll(mValues)
+        notifyDataSetChanged()
     }
 }

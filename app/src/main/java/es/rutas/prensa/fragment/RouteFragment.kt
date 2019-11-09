@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.android.volley.Request
 import es.rutas.prensa.R
 import es.rutas.prensa.adapter.RouteRecyclerViewAdapter
 import es.rutas.prensa.dto.RouteDto
+import es.rutas.prensa.service.RouteService
 
 /**
  * A fragment representing a list of Items.
@@ -27,12 +29,17 @@ class RouteFragment : Fragment() {
 
     private val routes = ArrayList<RouteDto>()
 
+    private val routeService: RouteService by lazy {
+        RouteService(context!!)
+    }
+
+    private var routeAdapter: RouteRecyclerViewAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
-        loadRoutes()
     }
 
     override fun onCreateView(
@@ -40,18 +47,8 @@ class RouteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_route_list, container, false)
-
-        // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-                adapter =
-                    RouteRecyclerViewAdapter(routes, listener)
-            }
-        }
+        routeAdapter = RouteRecyclerViewAdapter(routes, listener)
+        loadRoutes(view)
         return view
     }
 
@@ -60,7 +57,7 @@ class RouteFragment : Fragment() {
         if (context is OnListFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnListFragmentInteractionListener")
         }
     }
 
@@ -100,7 +97,21 @@ class RouteFragment : Fragment() {
             }
     }
 
-    private fun loadRoutes() {
+    private fun loadRoutes(view: View) {
+        this.routeService.getRoutes(Request.Method.GET, {response ->
+            // Set the adapter
+            if (view is RecyclerView) {
+                with(view) {
+                    layoutManager = when {
+                        columnCount <= 1 -> LinearLayoutManager(context)
+                        else -> GridLayoutManager(context, columnCount)
+                    }
+                    adapter = RouteRecyclerViewAdapter(response, listener)
 
+                }
+            }
+        }, {
+
+        })
     }
 }

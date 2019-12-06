@@ -1,39 +1,39 @@
 package es.rutas.prensa.activity
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 import es.rutas.prensa.R
 import es.rutas.prensa.dto.RouteDto
-import es.rutas.prensa.fragment.RouteFragment
+import es.rutas.prensa.fragment.route.RouteFragment
 
-import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_routes.*
 
 class HomeActivity : AppCompatActivity(), RouteFragment.OnListFragmentInteractionListener {
 
     override fun onListFragmentInteraction(item: RouteDto?) {
         if(item != null) {
-            loadRouteFragment(item)
+            loadRoutePoints(item)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-        setSupportActionBar(toolbar)
+        setContentView(R.layout.activity_routes)
+        setSupportActionBar(route_toolbar)
 
         loadRouteListFragment()
     }
 
     private fun loadRouteListFragment() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(home_fragment_container.id, RouteFragment.newInstance(1), "RouteFragment")
+        fragmentTransaction.replace(R.id.home_fragment_container, RouteFragment.newInstance(), "RouteFragment")
         fragmentTransaction.commit()
     }
 
-    private fun loadRouteFragment(route: RouteDto) {
-        Log.d("ROUTE: ", route.toString())
+    private fun loadRoutePoints(route: RouteDto) {
+        val intent = Intent(this, RoutePointsActivity::class.java)
+        intent.putExtra("route", route)
+        startActivity(intent)
     }
 }

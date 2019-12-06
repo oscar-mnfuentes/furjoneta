@@ -4,21 +4,17 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import es.rutas.prensa.R
+import es.rutas.prensa.databinding.RouteItemBinding
 import es.rutas.prensa.dto.RouteDto
 
 
-import es.rutas.prensa.fragment.RouteFragment.OnListFragmentInteractionListener
+import es.rutas.prensa.fragment.route.RouteFragment.OnListFragmentInteractionListener
 
-import kotlinx.android.synthetic.main.fragment_route.view.*
 
-/**
- * [RecyclerView.Adapter] that can display a [RouteDto] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- */
 class RouteRecyclerViewAdapter(
-    private val mValues: ArrayList<RouteDto>,
+    private var mValues: ArrayList<RouteDto>,
     private val mListener: OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<RouteRecyclerViewAdapter.ViewHolder>() {
 
@@ -34,32 +30,30 @@ class RouteRecyclerViewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_route, parent, false)
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val view: RouteItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_route, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(!mValues.isNullOrEmpty()) {
+        if (!mValues.isNullOrEmpty()) {
             val item = mValues[position]
-            holder.mIdView.text = item.id
-            holder.mContentView.text = item.name
-
-            with(holder.mView) {
-                tag = item
-                setOnClickListener(mOnClickListener)
-            }
+            holder.bind(item)
         }
     }
 
     override fun getItemCount(): Int = mValues.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
-        val mContentView: TextView = mView.content
-
-        override fun toString(): String {
-            return super.toString() + " '" + mContentView.text + "'"
+    inner class ViewHolder(private val mView: RouteItemBinding) : RecyclerView.ViewHolder(mView.root) {
+        fun bind(item: RouteDto) {
+            mView.route = item
+            mView.root.tag = item
+            mView.root.setOnClickListener(mOnClickListener)
         }
+    }
+
+    fun updateRoutes(routes: ArrayList<RouteDto>) {
+        mValues = routes
+        notifyDataSetChanged()
     }
 }

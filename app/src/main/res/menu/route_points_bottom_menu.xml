@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/route_points_list_option"
+        android:icon="@android:drawable/ic_dialog_dialer"
+        android:title="@string/route_points_list_option_title" />
+    <item
+        android:id="@+id/route_points_map_options"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="@string/route_points_map_option_title" />
+</menu>

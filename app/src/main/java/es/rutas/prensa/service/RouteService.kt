@@ -10,7 +10,7 @@ import es.rutas.prensa.config.Constants
 import es.rutas.prensa.dto.RouteDto
 import org.json.JSONArray
 
-class RouteService constructor(context: Context) {
+class RouteService constructor(context: Context?) {
     private val volleyService: VolleyService = VolleyService.getInstance(context)
     private val gson = Gson()
 

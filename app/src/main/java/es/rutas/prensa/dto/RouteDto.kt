@@ -1,5 +1,7 @@
 package es.rutas.prensa.dto
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-data class RouteDto(var id: String?, val name: String, var description: String?) : Serializable
+@Parcelize
+data class RouteDto(var id: String?, val name: String, var description: String?) : Parcelable
